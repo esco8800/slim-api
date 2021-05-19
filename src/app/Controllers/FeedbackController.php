@@ -78,6 +78,5 @@ class FeedbackController extends Controller
     {
         $component = new Bitrix24Component();
         $bitrixRes = $component->sendFeedback($feedback);
-        var_dump($bitrixRes); die();
     }
 }
