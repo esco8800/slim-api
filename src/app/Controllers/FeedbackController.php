@@ -8,6 +8,8 @@
 
 namespace App\Controllers;
 
+use App\Components\Bitrix24Component;
+use App\Models\Feedback;
 use Slim\Http\Request;
 use Slim\Http\Response;
 use App\Helpers\Config;
@@ -34,22 +36,13 @@ class FeedbackController extends Controller
     public function feedback(Request $request, Response $response)
     {
         try {
+            $feedback = $this->getFeedback($request);
+            $feedback->validate();
+            $this->sendFeedback($feedback);
 
             return $response
                 ->withStatus(StatusCode::HTTP_OK)
-                ->withJson(ResponseFormatter::format('Your message send successfully!'));
-            $this->validateFeedback($request);
-
-            $mailer = new SwiftMailerAdapter(Config::get('mailer.smtp'));
-            $from = Config::get('mailer.from');
-            $to = Config::get('mailer.to');
-            $subject = 'Тема письма';
-            $textMessage = "<p><strong>Имя</strong>: {$name}<br><strong>Телефон</strong>: {$phone}<br><strong>E-mail</strong>: {$email}<br></p>";
-            $mailer->send($from, $to, $subject, $textMessage/*, $uploadedFile*/);
-
-            return $response
-                ->withStatus(StatusCode::HTTP_OK)
-                ->withJson(ResponseFormatter::format('Your message send successfully!'));
+                ->withJson(ResponseFormatter::format('Your feedback send successfully!'));
 
         } catch (ValidationException $e) {
             return $response
@@ -65,20 +58,22 @@ class FeedbackController extends Controller
 
     /**
      * @param Request $request
-     * @throws ValidationException
+     * @return mixed
      */
-    protected function validateFeedback(Request $request)
+    protected function getFeedback(Request $request)
     {
-        if (!Validator::notEmpty()->validate($name = $request->getParsedBodyParam('name'))) {
-            throw new ValidationException('Wrong name.');
-        }
+        return new Feedback(
+            $request->getParsedBodyParam('name'),
+            $request->getParsedBodyParam('email'),
+            $request->getParsedBodyParam('phone'),
+            $request->getParsedBodyParam('consentPd'),
+            $request->getParsedBodyParam('consentRules')
+        );
+    }
 
-        if (!Validator::email()->validate($email = $request->getParsedBodyParam('email'))) {
-            throw new ValidationException('Wrong Email-address.');
-        }
-
-        if (!Validator::notEmpty()->validate($phone = $request->getParsedBodyParam('phone'))) {
-            throw new ValidationException('Wrong phone number.');
-        }
+    protected function sendFeedback(Feedback $feedback)
+    {
+        $component = new Bitrix24Component();
+        $component->sendFeedback($feedback);
     }
 }

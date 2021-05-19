@@ -10,8 +10,6 @@ namespace App\Http\Handlers;
 
 use Slim\Http\Request;
 use Slim\Http\Response;
-use Slim\Http\StatusCode;
-use Slim\Views\PhpRenderer;
 
 /**
  * Обработчик NotFoundHandler
@@ -31,7 +29,7 @@ class NotFoundHandler
     {
         return $response->withJson([
             'message' => 'Not Found',
-            'status' => 404
+            'code' => 404
         ])->withStatus(404);
     }
 }

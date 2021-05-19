@@ -6,7 +6,8 @@
         "respect/validation": "^1.1",
         "swiftmailer/swiftmailer": "^5.0",
         "symfony/dotenv": "^3.4",
-        "monolog/monolog": "^1.24"
+        "monolog/monolog": "^1.24",
+        "guzzlehttp/guzzle": "^7.0"
     },
     "scripts": {
         "post-install-cmd": "chmod -R 777 storage"

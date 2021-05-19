@@ -37,7 +37,7 @@ $container['notAllowedHandler'] = function ($container) {
             ->withJson(
                 [
                     'message' => 'Method must be one of: ' . implode(', ', $methods),
-                    'status' => 405
+                    'code' => 405
                 ]
             );
     };
