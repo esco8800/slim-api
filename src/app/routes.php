@@ -4,11 +4,10 @@
  *
  * @copyright Copyright (c) 2019, Oleg Chulakov Studio
  * @link http://chulakov.com/
+ *
+ * @var \Slim\App $app
  */
 
-use App\Controllers\HomeController;
+use App\Controllers\FeedbackController;
 
-$app->get('/', HomeController::class . ':index')->setName('index');
-$app->get('/home', HomeController::class . ':home')->setName('home');
-$app->post('/contact', HomeController::class . ':contact')->setName('contact');
-
+$app->post('/feedback', FeedbackController::class . ':feedback')->setName('feedback');

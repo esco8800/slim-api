@@ -9,8 +9,8 @@
 namespace App\Controllers;
 
 use Monolog\Logger;
-use Slim\Views\PhpRenderer;
 use Psr\Container\ContainerInterface;
+use Slim\Http\Response;
 
 /**
  * Контроллер Controller
@@ -19,12 +19,6 @@ use Psr\Container\ContainerInterface;
  */
 class Controller
 {
-    /**
-     * Представление
-     *
-     * @var PhpRenderer
-     */
-    protected $view;
     /**
      * Логгер
      *
@@ -39,7 +33,6 @@ class Controller
      */
     public function __construct(ContainerInterface $container)
     {
-        $this->view = $container->get('view');
         $this->logger = $container->get('logger');
     }
 }

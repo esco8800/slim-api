@@ -21,21 +21,6 @@ use Slim\Views\PhpRenderer;
 class NotFoundHandler
 {
     /**
-     * @var PhpRenderer
-     */
-    protected $view;
-
-    /**
-     * Конструктор
-     *
-     * @param PhpRenderer $view
-     */
-    public function __construct(PhpRenderer $view)
-    {
-        $this->view = $view;
-    }
-
-    /**
      * Вызов обработчика
      *
      * @param Request $request
@@ -44,6 +29,9 @@ class NotFoundHandler
      */
     public function __invoke(Request $request, Response $response)
     {
-        return $this->view->render($response->withStatus(StatusCode::HTTP_NOT_FOUND), '404.php');
+        return $response->withJson([
+            'message' => 'Not Found',
+            'status' => 404
+        ])->withStatus(404);
     }
 }

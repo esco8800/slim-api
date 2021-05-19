@@ -44,7 +44,6 @@ class Config
     public static function get($key, $filename = self::BASE_CONFIG_FILE)
     {
         static::load($filename);
-
         return ArrayHelper::getValue(static::$config, $key);
     }
 }

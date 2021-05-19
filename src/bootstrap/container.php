@@ -17,15 +17,28 @@ $container['logger'] = function ($container) {
     );
 };
 
-$container['HomeController'] = function ($container) {
-    return new \App\Controllers\HomeController($container);
+$container['FeedbackController'] = function ($container) {
+    return new \App\Controllers\FeedbackController($container);
 };
 
-//Раскомментировать если требуется 404 страница
-//$container['notFoundHandler'] = function ($container) {
-//    return new \App\Http\Handlers\NotFoundHandler($container->get('view'));
-//};
+$container['notFoundHandler'] = function ($container) {
+    return new \App\Http\Handlers\NotFoundHandler();
+};
 
 $container['errorHandler'] = function ($container) {
     return new \App\Http\Handlers\ErrorHandler($container->get('logger'));
+};
+
+$container['notAllowedHandler'] = function ($container) {
+    return function ($request, $response, $methods) use ($container) {
+        return $response->withStatus(405)
+            ->withHeader('Allow', implode(', ', $methods))
+            ->withHeader('Content-type', 'text/json')
+            ->withJson(
+                [
+                    'message' => 'Method must be one of: ' . implode(', ', $methods),
+                    'status' => 405
+                ]
+            );
+    };
 };

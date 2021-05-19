@@ -22,41 +22,23 @@ use Respect\Validation\Exceptions\ValidationException;
  *
  * @package App\Controllers
  */
-class HomeController extends Controller
+class FeedbackController extends Controller
 {
     /**
-     * Отправка формы обратной связи AJAX
+     * Отправка формы обратной связи
      *
      * @param Request $request
      * @param Response $response
      * @return Response
      */
-    public function contact(Request $request, Response $response)
+    public function feedback(Request $request, Response $response)
     {
         try {
-            if (!Validator::notEmpty()->validate($name = $request->getParsedBodyParam('name'))) {
-                throw new ValidationException('Wrong name.');
-            }
 
-            if (!Validator::email()->validate($email = $request->getParsedBodyParam('email'))) {
-                throw new ValidationException('Wrong Email-address.');
-            }
-
-            if (!Validator::notEmpty()->validate($phone = $request->getParsedBodyParam('phone'))) {
-                throw new ValidationException('Wrong phone number.');
-            }
-
-            /*
-             * Получение загружаемого файла
-             *
-            $uploadedFiles = $request->getUploadedFiles();
-
-            if (isset($uploadedFiles['file']) && $uploadedFiles['file']->getError() === UPLOAD_ERR_OK) {
-                $uploadedFile = $uploadedFiles['file'];
-            } else {
-                $uploadedFile = null;
-            }
-            */
+            return $response
+                ->withStatus(StatusCode::HTTP_OK)
+                ->withJson(ResponseFormatter::format('Your message send successfully!'));
+            $this->validateFeedback($request);
 
             $mailer = new SwiftMailerAdapter(Config::get('mailer.smtp'));
             $from = Config::get('mailer.from');
@@ -68,20 +50,35 @@ class HomeController extends Controller
             return $response
                 ->withStatus(StatusCode::HTTP_OK)
                 ->withJson(ResponseFormatter::format('Your message send successfully!'));
+
         } catch (ValidationException $e) {
             return $response
                 ->withStatus(StatusCode::HTTP_BAD_REQUEST)
                 ->withJson(ResponseFormatter::format($e->getMessage(), StatusCode::HTTP_BAD_REQUEST));
-        } catch (\Swift_SwiftException $e) {
-            $this->logger->error($e->getMessage());
-            return $response
-                ->withStatus(StatusCode::HTTP_INTERNAL_SERVER_ERROR)
-                ->withJson(ResponseFormatter::format('Email service temporarily unavailable.', StatusCode::HTTP_INTERNAL_SERVER_ERROR));
         } catch (\Exception $e) {
             $this->logger->error($e->getMessage());
             return $response
                 ->withStatus(StatusCode::HTTP_INTERNAL_SERVER_ERROR)
                 ->withJson(ResponseFormatter::format('Service temporarily unavailable.', StatusCode::HTTP_INTERNAL_SERVER_ERROR));
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @throws ValidationException
+     */
+    protected function validateFeedback(Request $request)
+    {
+        if (!Validator::notEmpty()->validate($name = $request->getParsedBodyParam('name'))) {
+            throw new ValidationException('Wrong name.');
+        }
+
+        if (!Validator::email()->validate($email = $request->getParsedBodyParam('email'))) {
+            throw new ValidationException('Wrong Email-address.');
+        }
+
+        if (!Validator::notEmpty()->validate($phone = $request->getParsedBodyParam('phone'))) {
+            throw new ValidationException('Wrong phone number.');
         }
     }
 }

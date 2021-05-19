@@ -49,7 +49,6 @@ final class ErrorHandler extends Error
     public function __invoke(Request $request, Response $response, \Exception $exception)
     {
         $this->logger->critical($exception->getMessage());
-
         return parent::__invoke($request, $response, $exception);
     }
 }
