@@ -1,0 +1,61 @@
+version: "3.5"
+
+networks:
+  frontend-network:
+    external:
+      name: ${FRONTEND_NETWORK_NAME}
+  backend-network:
+    external:
+      name: ${BACKEND_NETWORK_NAME}
+
+services:
+  # Applicaton container with PHP-FPM only
+  &app-service app: &app-service-template
+    image: ci.chulakov.ru:5000/chulakov/php-fpm:latest
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "2"
+        max-size: "5m"
+    container_name: &app-container-name ${COMPOSE_PROJECT_NAME}-app
+    restart: on-failure
+    environment: &app-service-envs
+      PHP_ENABLE_XDEBUG: ${PHP_ENABLE_XDEBUG}
+      XDEBUG_CONFIG: "${XDEBUG_CONFIG}"
+      PHP_IDE_CONFIG: "${PHP_IDE_CONFIG}"
+
+      SMTP_HOST: "${SMTP_HOST}"
+      SMTP_USERNAME: "${SMTP_USERNAME}"
+      SMTP_PASSWORD: "${SMTP_PASSWORD}"
+      SMTP_ENCRYPTION: "${SMTP_ENCRYPTION}"
+      SMTP_PORT: "${SMTP_PORT}"
+      MAIL_FROM: "${MAIL_FROM}"
+      MAIL_TO: "${MAIL_TO}"
+    volumes:
+      - ./../../src:/app:ro
+    networks:
+      - backend-network
+
+  # NGINX container with proxy
+  nginx-app: &nginx-service-template
+    image: ci.chulakov.ru:5000/chulakov/nginx-fastcgi:latest
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "2"
+        max-size: "5m"
+    container_name: "${COMPOSE_PROJECT_NAME}-nginx"
+    restart: on-failure
+    environment:
+      FPM_HOST: *app-container-name
+      ROOT_DIR: "/app/public"
+      VIRTUAL_HOST: "${COMPOSE_PROJECT_NAME}"
+    volumes:
+      - ./../../src:/app:ro
+    ports:
+      - "${PORT}:80"
+    depends_on:
+      - *app-service
+    networks:
+      - backend-network
+      - frontend-network

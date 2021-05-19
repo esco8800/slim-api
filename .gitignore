@@ -1,0 +1,32 @@
+# IDE and OS
+.idea
+.mc
+.settings
+.subversion
+.buildpath
+.classpath
+.cproject
+.loadpath
+.metadata
+.pmt
+.project
+.env
+.docker-sync
+serv.env
+$RECYCLE.BIN
+.DS_Store
+Desktop.ini
+ehthumbs.db
+Thumbs.db
+node_modules
+npm-debug.log
+composer.phar
+vendor
+
+# Project
+src/public/iconfont
+src/public/css/style.css
+src/public/js/libs.js
+src/public/js/script.js
+src/public/js/*.js.map
+src/yarn-error.log
