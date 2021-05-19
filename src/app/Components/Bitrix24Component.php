@@ -3,35 +3,27 @@
 namespace App\Components;
 
 use App\Models\Feedback;
-use GuzzleHttp\Client;
-use GuzzleHttp\RequestOptions;
 
 class Bitrix24Component
 {
     /**
-     * @var Client
+     * @param Feedback $feedback
+     * @return array|mixed|string|string[]
      */
-    protected $client;
-
     public function sendFeedback(Feedback $feedback)
     {
-
+        return CRest::call(
+            'crm.lead.add',
+            [
+                'fields' => [
+                    'TITLE' => 'Новый лид с сайта',
+                    'NAME' => $feedback->name,
+                    'EMAIL[0][VALUE]' => $feedback->email,
+                    'FIELDS[EMAIL][0][VALUE_TYPE]' => 'WORK',
+                    'FIELDS[PHONE][0][VALUE]' => $feedback->phone,
+                    'FIELDS[PHONE][0][VALUE_TYPE]' => 'WORK',
+                ]
+            ]
+        );
     }
-
-    /**
-     * Получение HTTP клиента.
-     * С предворительной инициализацией и дефолтной конфигурацией
-     *
-     * @return Client
-     */
-    protected function getClient()
-    {
-        if (is_null($this->client)) {
-            $this->client = new Client([
-                RequestOptions::VERIFY => false,
-            ]);
-        }
-        return $this->client;
-    }
-
 }

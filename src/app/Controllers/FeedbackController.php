@@ -71,9 +71,13 @@ class FeedbackController extends Controller
         );
     }
 
+    /**
+     * @param Feedback $feedback
+     */
     protected function sendFeedback(Feedback $feedback)
     {
         $component = new Bitrix24Component();
-        $component->sendFeedback($feedback);
+        $bitrixRes = $component->sendFeedback($feedback);
+        var_dump($bitrixRes); die();
     }
 }

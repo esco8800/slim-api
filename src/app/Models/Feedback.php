@@ -14,7 +14,6 @@ class Feedback
     public $consentPd;
     public $consentRules;
 
-
     public function __construct(
         $name,
         $email,
@@ -50,7 +49,5 @@ class Feedback
         if (!Validator::trueVal()->validate($this->consentRules)) {
             throw new ValidationException('Wrong consentRules.');
         }
-
     }
-
 }
