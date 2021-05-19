@@ -17,8 +17,6 @@ $container['logger'] = function ($container) {
     );
 };
 
-$container['view'] = new \Slim\Views\PhpRenderer('../resources/views/');
-
 $container['HomeController'] = function ($container) {
     return new \App\Controllers\HomeController($container);
 };

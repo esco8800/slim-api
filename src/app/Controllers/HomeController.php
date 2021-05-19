@@ -25,30 +25,6 @@ use Respect\Validation\Exceptions\ValidationException;
 class HomeController extends Controller
 {
     /**
-     * Отображение главной страницы
-     *
-     * @param Request $request
-     * @param Response $response
-     * @return \Psr\Http\Message\ResponseInterface
-     */
-    public function index(Request $request, Response $response)
-    {
-        return $this->view->render($response, 'index.php');
-    }
-
-    /**
-     * Отображение домашней страницы
-     *
-     * @param Request $request
-     * @param Response $response
-     * @return \Psr\Http\Message\ResponseInterface
-     */
-    public function home(Request $request, Response $response)
-    {
-        return $this->view->render($response, 'home.php');
-    }
-
-    /**
      * Отправка формы обратной связи AJAX
      *
      * @param Request $request

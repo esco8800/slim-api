@@ -1,0 +1,48 @@
+version: "3.5"
+
+networks:
+  backend-network:
+    external:
+      name: "${BACKEND_NETWORK_NAME}"
+
+services:
+  php: &app-service-template
+    image: git.chulakov.org:5555/docker/compose/developement/php:7.3-1.0.0-cli
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "2"
+        max-size: "5m"
+    container_name: ${COMPOSE_PROJECT_NAME}-cli
+    environment: &app-service-envs
+      PHP_ENABLE_XDEBUG: ${PHP_ENABLE_XDEBUG}
+      XDEBUG_CONFIG: "${XDEBUG_CONFIG}"
+      PHP_IDE_CONFIG: "${PHP_IDE_CONFIG}"
+
+      SMTP_HOST: "${SMTP_HOST}"
+      SMTP_USERNAME: "${SMTP_USERNAME}"
+      SMTP_PASSWORD: "${SMTP_PASSWORD}"
+      SMTP_ENCRYPTION: "${SMTP_ENCRYPTION}"
+      SMTP_PORT: "${SMTP_PORT}"
+      MAIL_FROM: "${MAIL_FROM}"
+      MAIL_TO: "${MAIL_TO}"
+    volumes:
+      - ./../../src:/app:ro
+    networks:
+      - backend-network
+
+  # Composer container
+  composer:
+    image: git.chulakov.org:5555/docker/images/composer:1.9-1.0.0
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "2"
+        max-size: "5m"
+    container_name: ${COMPOSE_PROJECT_NAME}-composer-cli
+    volumes:
+      - ./../../src:/app:rw
+      - ~/.ssh:/root/.ssh/:ro
+    restart: on-failure
+    networks:
+      - backend-network

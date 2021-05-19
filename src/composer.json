@@ -1,7 +1,8 @@
 {
+    "name": "ilya.semenov/slim-api",
+    "description": "basic slim-api",
     "require": {
         "slim/slim": "^3.0",
-        "slim/php-view": "^2.2",
         "respect/validation": "^1.1",
         "swiftmailer/swiftmailer": "^5.0",
         "symfony/dotenv": "^3.4",

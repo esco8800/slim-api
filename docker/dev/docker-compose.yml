@@ -11,7 +11,7 @@ networks:
 services:
   # Applicaton container with PHP-FPM only
   &app-service app: &app-service-template
-    image: ci.chulakov.ru:5000/chulakov/php-fpm:latest
+    image: git.chulakov.org:5555/docker/compose/developement/php:7.3-1.0.0-fpm
     logging:
       driver: "json-file"
       options:

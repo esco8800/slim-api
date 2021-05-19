@@ -50,5 +50,5 @@ cli-node: ## Start Node.js shell for manual operations
 # --- [ Install] ------------------------------------------------------------------------------------------------------
 
 install-composer: ## Install Composer deps
-	$(docker_compose_bin) -f ./docker-compose-build.yml run --rm "$(COMPOSER_CONTAINER_NAME)" composer install --no-interaction --ansi --no-suggest
+	$(docker_compose_bin) -f ./docker-compose-build.yml run --rm "$(COMPOSER_CONTAINER_NAME)" composer install --no-interaction --ignore-platform-reqs --ansi --no-suggest
 
