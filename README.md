@@ -1,2 +1,2 @@
 # slim-api
-basic slim-api
+basic slim-api -
